@@ -28,3 +28,21 @@ exports.validateUserReqBody = async(req, res, next)=>{
     next()
 
 }
+
+exports.validateSignInReq = async(req, res, next)=>{
+    // If the email entered by the user does not exist, return the JSON response 'This email has not been registered!' with the corresponding HTTP status.
+    
+    // If the password provided by the user does not match the credentials in the existing database, return the JSON response 'Invalid Credentials!' with the corresponding HTTP status.
+        const user = await userModel.findOne({email:req.body.email})
+        if(!user){
+            return res.status(400).send("Email doesnot Exist")
+        }
+        const isPasswordValid = bcrypt.compareSync(req.body.password, user.password)
+        if(!isPasswordValid){
+            return res.status(400).send("Password doesnot match")
+        }
+    
+        req.user = user
+        
+        next()
+    }

@@ -39,3 +39,19 @@ exports.signUp = async(req, res)=>{
         })
     }
 }
+
+exports.signIn = async(req, res)=>{
+    
+    //jwt token
+    const token = jwt.sign({firstName:req.user.firstName, role:req.user.role, issuedAt: new Date()}, "SECRET SALT",{
+        expiresIn:600
+    })
+
+    res.setHeader("x-auth-token", token)
+
+    res.status(200).json({
+        email: req.body.email,
+        name: req.user.firstName,
+        isAuthenticated: true
+    })
+} 
