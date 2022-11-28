@@ -1,12 +1,9 @@
-const addressController = require("../controllers/addresses.controller")
+const addressController =  require("../controllers/addresses.controller")
 const express = require("express")
-const router = express.Router()
-const validateUserReqBody = require("../middlewares/validateUserReqBody")
+const addressRouter = express.Router()
+const authjwt = require("../middlewares/authjwt")
+const validateAddressReqBody = require("../middlewares/validateAddressReqBody")
 
-router.post("/",[validateUserReqBody.validateUserReqBody], addressController.createAddress)
+addressRouter.post("/", [authjwt.verifyToken, validateAddressReqBody.validateAddressReqBody], addressController.createAddress)
 
-
-router.all('*', (req, res)=>{
-    return res.status(404).send("invalid url")
-})
-module.exports = router
+module.exports = addressRouter
